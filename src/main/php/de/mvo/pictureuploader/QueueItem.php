@@ -1,0 +1,104 @@
+<?php
+namespace de\mvo\pictureuploader;
+
+use de\mvo\pictureuploader\image\Resizer;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+
+class QueueItem
+{
+    /**
+     * @var Date
+     */
+    public $date;
+    /**
+     * @var string
+     */
+    public $folder;
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var string
+     */
+    public $title;
+
+    public static function fromFile($filename)
+    {
+        $file = sprintf("%s/%s", Config::getValue(null, "queue"), basename($filename));
+
+        if (!file_exists($file)) {
+            return null;
+        }
+
+        return unserialize(file_get_contents($file));
+    }
+
+    public function save()
+    {
+        $data = serialize($this);
+
+        mkdir(Config::getValue("queue", "path"), 0775, true);
+
+        file_put_contents(sprintf("%s/%s.serialize", Config::getValue(null, "queue"), md5($data)), $data);
+    }
+
+    public function process()
+    {
+        $cachePath = sprintf("%s/%d/%s", Config::getValue(null, "pictures-cache"), $this->date->format("Y"), $this->name);
+
+        list($largeWidth, $largeHeight) = explode("x", Config::getValue(null, "large-size", "1500x1000"));
+        list($smallWidth, $smallHeight) = explode("x", Config::getValue(null, "small-size", "600x200"));
+
+        $filesystem = new Filesystem;
+
+        $finder = new Finder;
+
+        $finder->files();
+        $finder->in(sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder));
+        $finder->name("*.jpg");
+
+        $validFiles = array();
+
+        foreach ($finder as $item) {
+            $originalFile = $item->getPath();
+
+            $md5 = md5_file($originalFile);
+
+            $largeFile = sprintf("%s/%s_large.jpg", $cachePath, $md5);
+            $smallFile = sprintf("%s/%s_small.jpg", $cachePath, $md5);
+
+            $validFiles[] = $largeFile;
+            $validFiles[] = $smallFile;
+
+            $resizer = new Resizer($originalFile);
+
+            if (!is_file($largeFile)) {
+                Logger::log("Saving large version of " . $originalFile);
+                imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile);
+            }
+
+            if (!is_file($smallFile)) {
+                Logger::log("Saving small version of " . $originalFile);
+                imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile);
+            }
+        }
+
+        $finder = new Finder;
+
+        $finder->in($cachePath);
+        $finder->notName("album.json");
+
+        // Cleanup old files
+        foreach ($finder as $item) {
+            if (in_array($item->getFilename(), $validFiles)) {
+                continue;
+            }
+
+            $filesystem->remove($item->getPath());
+        }
+
+        // TODO rsync to remote system
+    }
+}

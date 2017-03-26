@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+    <head>
+        <title>MVO Picture Uploader</title>
+
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+
+        <link rel="stylesheet" href="css/main.css"/>
+
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/mustache.js/mustache.min.js"></script>
+        <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+        <script type="text/html" id="status-template">
+            {{#queue.length}}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Titel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#queue}}
+                            <tr>
+                                <td>{{date}}</td>
+                                <td>{{title}}</td>
+                            </tr>
+                        {{/queue}}
+                    </tbody>
+                </table>
+            {{/queue.length}}
+            {{^queue.length}}
+                <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> Es werden derzeit keine Bilder hochgeladen.</div>
+            {{/queue.length}}
+        </script>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class="page-header">MVO Picture Uploader</h1>
+
+            <div id="status"></div>
+        </div>
+    </body>
+</html>

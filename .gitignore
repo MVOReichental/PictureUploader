@@ -1,0 +1,5 @@
+/.idea/
+/.vagrant/
+/httpdocs/bower_components/
+/src/main/resources/config.ini
+/vendor/

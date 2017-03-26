@@ -1,0 +1,25 @@
+{
+    "name": "mvo/picture-uploader",
+    "description": "A webfrontend for uploading picture albums to the MVO website",
+    "homepage": "https://musikverein-reichental.de",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Michael Wieland",
+            "email": "git@selfcoders.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "": "src/main/php"
+        }
+    },
+    "require": {
+        "altorouter/altorouter": "^1.1",
+        "programie/pini": "dev-master",
+        "twig/twig": "^1.24",
+        "symfony/finder": "^3.2",
+        "symfony/filesystem": "^3.2"
+    }
+}

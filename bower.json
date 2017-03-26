@@ -1,0 +1,21 @@
+{
+  "name": "MVO Picture Uploader",
+  "description": "A webfrontend for uploading picture albums to the MVO website",
+  "authors": [
+    "Michael Wieland <git@selfcoders.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://musikverein-reichental.de",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "mustache.js": "mustache#^2.3.0",
+    "moment": "momentjs#^2.18.1"
+  }
+}
