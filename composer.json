@@ -20,6 +20,7 @@
         "programie/pini": "dev-master",
         "twig/twig": "^1.24",
         "symfony/finder": "^3.2",
-        "symfony/filesystem": "^3.2"
+        "symfony/filesystem": "^3.2",
+        "symfony/process": "^3.2"
     }
 }

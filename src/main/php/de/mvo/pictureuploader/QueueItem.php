@@ -4,6 +4,7 @@ namespace de\mvo\pictureuploader;
 use de\mvo\pictureuploader\image\Resizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 class QueueItem
 {
@@ -39,7 +40,7 @@ class QueueItem
     {
         $data = serialize($this);
 
-        mkdir(Config::getValue("queue", "path"), 0775, true);
+        mkdir(Config::getValue(null, "queue"), 0775, true);
 
         file_put_contents(sprintf("%s/%s.serialize", Config::getValue(null, "queue"), md5($data)), $data);
     }
@@ -99,6 +100,29 @@ class QueueItem
             $filesystem->remove($item->getPath());
         }
 
-        // TODO rsync to remote system
+        $logFile = Config::getValue(null, "rsync-log");
+        $remotePath = sprintf("%s/%s/%s", Config::getValue(null, "target"), $this->date->format("Y"), $this->name);
+        $sshKey = Config::getValue(null, "ssh-key");
+        $sshUser = Config::getValue(null, "ssh-user");
+        $host = Config::getValue(null, "host");
+        $updateScript = Config::getValue(null, "update-script");
+
+        $rsyncCommand = array
+        (
+            "rsync",
+            "-avz",
+            "--delete",
+            sprintf("--log-file %s", escapeshellarg($logFile)),
+            sprintf("--rsync-path %s", escapeshellarg(sprintf("mkdir -p %s && rsync", $remotePath))),
+            sprintf("-e %s", escapeshellarg(sprintf("ssh -i %s", $sshKey))),
+            escapeshellarg($cachePath),
+            escapeshellarg(sprintf("%s@%s:%s", $sshUser, $host, $remotePath))
+        );
+
+        $process = new Process(implode(" ", $rsyncCommand));
+        $process->mustRun();
+
+        $process = new Process(sprintf("ssh -i %s %s %s", escapeshellarg($sshKey), escapeshellarg($sshUser . "@" . $host), $updateScript));
+        $process->mustRun();
     }
 }

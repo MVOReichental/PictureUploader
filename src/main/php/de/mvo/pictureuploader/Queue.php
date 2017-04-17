@@ -10,7 +10,7 @@ class Queue extends ArrayObject
     {
         $list = new self;
 
-        foreach (new DirectoryIterator(Config::getValue("queue", "path")) as $item) {
+        foreach (new DirectoryIterator(Config::getValue(null, "queue")) as $item) {
             if ($item->isDot()) {
                 continue;
             }
