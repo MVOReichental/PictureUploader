@@ -100,12 +100,13 @@ class QueueItem
             $filesystem->remove($item->getPath());
         }
 
+        $remoteAppDir = Config::getValue(null, "remote-app-dir");
         $logFile = Config::getValue(null, "rsync-log");
-        $remotePath = sprintf("%s/%s/%s", Config::getValue(null, "target"), $this->date->format("Y"), $this->name);
+        $remotePath = sprintf("%s/httpdocs/pictures/%s/%s", $remoteAppDir, $this->date->format("Y"), $this->name);
         $sshKey = Config::getValue(null, "ssh-key");
         $sshUser = Config::getValue(null, "ssh-user");
         $host = Config::getValue(null, "host");
-        $updateScript = Config::getValue(null, "update-script");
+        $updateScript = sprintf("%s/bin/update-pictures.php", $remoteAppDir);
 
         $rsyncCommand = array
         (
@@ -122,7 +123,7 @@ class QueueItem
         $process = new Process(implode(" ", $rsyncCommand));
         $process->mustRun();
 
-        $process = new Process(sprintf("ssh -i %s %s %s", escapeshellarg($sshKey), escapeshellarg($sshUser . "@" . $host), $updateScript));
+        $process = new Process(sprintf("ssh -i %s %s %s", escapeshellarg($sshKey), escapeshellarg($sshUser . "@" . $host), escapeshellarg($updateScript)));
         $process->mustRun();
     }
 }
