@@ -28,15 +28,15 @@ class Config extends Pini
         $ini = self::getInstance();
 
         if ($section === null or $section === "") {
-            $section = $ini->getDefaultSection();
+            $sectionInstance = $ini->getDefaultSection();
         } else {
-            $section = $ini->getSection($section);
+            $sectionInstance = $ini->getSection($section);
         }
 
         $value = $defaultValue;
 
-        if ($section !== null) {
-            $value = $section->getPropertyValue($property, $value);
+        if ($sectionInstance !== null) {
+            $value = $sectionInstance->getPropertyValue($property, $value);
         }
 
         if ($value === null) {
