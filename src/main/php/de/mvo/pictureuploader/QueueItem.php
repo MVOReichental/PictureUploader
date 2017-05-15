@@ -86,16 +86,16 @@ class QueueItem
             $resizer = new Resizer($originalFile);
 
             if (!is_file($largeFile)) {
-                Logger::log("Saving large version of " . $originalFile);
+                Logger::log(sprintf("Saving large version of %s to %s", $originalFile, $largeFile));
                 if (!imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile)) {
                     throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
                 }
             }
 
             if (!is_file($smallFile)) {
-                Logger::log("Saving small version of " . $originalFile);
+                Logger::log(sprintf("Saving small version of %s to %s", $originalFile, $smallFile));
                 if (!imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile)) {
-                    throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
+                    throw new RuntimeException(sprintf("Unable to save picture to %s", $smallFile));
                 }
             }
         }
