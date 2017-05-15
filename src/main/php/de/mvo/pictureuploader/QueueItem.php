@@ -49,6 +49,8 @@ class QueueItem
     {
         $cachePath = sprintf("%s/%d/%s", Config::getValue(null, "pictures-cache"), $this->date->format("Y"), $this->name);
 
+        mkdir($cachePath, 0775, true);
+
         list($largeWidth, $largeHeight) = explode("x", Config::getValue(null, "large-size", "1500x1000"));
         list($smallWidth, $smallHeight) = explode("x", Config::getValue(null, "small-size", "600x200"));
 
