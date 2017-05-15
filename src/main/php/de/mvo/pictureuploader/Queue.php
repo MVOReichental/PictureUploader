@@ -10,22 +10,26 @@ class Queue extends ArrayObject
     {
         $list = new self;
 
-        foreach (new DirectoryIterator(Config::getValue(null, "queue")) as $item) {
-            if ($item->isDot()) {
-                continue;
+        $queuePath = Config::getValue(null, "queue");
+
+        if (is_dir($queuePath)) {
+            foreach (new DirectoryIterator($queuePath) as $item) {
+                if ($item->isDot()) {
+                    continue;
+                }
+
+                if (!$item->isFile()) {
+                    continue;
+                }
+
+                $queueItem = QueueItem::fromFile($item->getFilename());
+
+                if ($queueItem === null) {
+                    continue;
+                }
+
+                $list->append($queueItem);
             }
-
-            if (!$item->isFile()) {
-                continue;
-            }
-
-            $queueItem = QueueItem::fromFile($item->getFilename());
-
-            if ($queueItem === null) {
-                continue;
-            }
-
-            $list->append($queueItem);
         }
 
         return $list;
