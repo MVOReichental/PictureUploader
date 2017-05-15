@@ -2,6 +2,7 @@
 namespace de\mvo\pictureuploader;
 
 use de\mvo\pictureuploader\image\Resizer;
+use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
@@ -86,12 +87,16 @@ class QueueItem
 
             if (!is_file($largeFile)) {
                 Logger::log("Saving large version of " . $originalFile);
-                imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile);
+                if (!imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile)) {
+                    throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
+                }
             }
 
             if (!is_file($smallFile)) {
                 Logger::log("Saving small version of " . $originalFile);
-                imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile);
+                if (!imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile)) {
+                    throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
+                }
             }
         }
 
