@@ -59,12 +59,12 @@ class QueueItem
         $finder->files();
         $finder->in(sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder));
         $finder->depth("==0");
-        $finder->name("*.jpg");
+        $finder->name("/\.jpg/i");
 
         $validFiles = array();
 
         foreach ($finder as $item) {
-            $originalFile = $item->getPath();
+            $originalFile = $item->getPathname();
 
             $md5 = md5_file($originalFile);
 
@@ -98,7 +98,7 @@ class QueueItem
                 continue;
             }
 
-            $filesystem->remove($item->getPath());
+            $filesystem->remove($item->getPathname());
         }
 
         $remoteAppDir = Config::getValue(null, "remote-app-dir");
