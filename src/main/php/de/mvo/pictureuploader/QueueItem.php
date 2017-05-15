@@ -58,6 +58,7 @@ class QueueItem
 
         $finder->files();
         $finder->in(sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder));
+        $finder->depth("==0");
         $finder->name("*.jpg");
 
         $validFiles = array();
