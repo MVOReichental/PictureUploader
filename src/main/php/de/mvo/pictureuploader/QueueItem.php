@@ -107,7 +107,7 @@ class QueueItem
 
         // Cleanup old files
         foreach ($finder as $item) {
-            if (in_array($item->getFilename(), $validFiles)) {
+            if (in_array($item->getPathname(), $validFiles)) {
                 continue;
             }
 
