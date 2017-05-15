@@ -40,16 +40,22 @@ class QueueItem
     {
         $data = serialize($this);
 
-        mkdir(Config::getValue(null, "queue"), 0775, true);
+        $queuePath = Config::getValue(null, "queue");
 
-        file_put_contents(sprintf("%s/%s.serialize", Config::getValue(null, "queue"), md5($data)), $data);
+        if (!is_dir($queuePath)) {
+            mkdir($queuePath, 0775, true);
+        }
+
+        file_put_contents(sprintf("%s/%s.serialize", $queuePath, md5($data)), $data);
     }
 
     public function process()
     {
         $cachePath = sprintf("%s/%d/%s", Config::getValue(null, "pictures-cache"), $this->date->format("Y"), $this->name);
 
-        mkdir($cachePath, 0775, true);
+        if (!is_dir($cachePath)) {
+            mkdir($cachePath, 0775, true);
+        }
 
         list($largeWidth, $largeHeight) = explode("x", Config::getValue(null, "large-size", "1500x1000"));
         list($smallWidth, $smallHeight) = explode("x", Config::getValue(null, "small-size", "600x200"));
