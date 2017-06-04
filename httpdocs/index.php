@@ -20,7 +20,7 @@ if ($match === false) {
 
 switch ($match["target"]) {
     case "html":
-        readfile("status.html");
+        readfile("view.html");
         break;
     case "status":
         header("Content-Type: application/json");
