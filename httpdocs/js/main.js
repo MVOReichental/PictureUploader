@@ -1,8 +1,8 @@
 $(function () {
     moment.locale("de");
 
-    pollQueue();
-    pollAlbums();
+    updateData();
+    setInterval(updateData, 5000);
 
     $("#albums").on("click", ".upload-album", function () {
         var row = $(this).closest("tr");
@@ -34,24 +34,22 @@ $(function () {
             isPublic: $("#upload-modal-public").is(":checked") ? 1 : 0,
             useAsYearCover: $("#upload-modal-year-cover").is(":checked") ? 1 : 0
         }, function () {
+            updateData();
+
             modal.modal("hide");
         });
     });
 });
 
-function pollQueue() {
+function updateData() {
     $.get("queue.json", function (queue) {
         for (var index = 0; index < queue.length; index++) {
             queue[index].date = moment(queue[index].date).format("LL");
         }
 
         $("#queue").html(Mustache.render($("#queue-template").html(), {queue: queue}));
-    }).always(function () {
-        setTimeout(pollQueue, 5000);
     });
-}
 
-function pollAlbums() {
     $.get("albums.json", function (albums) {
         for (var index = 0; index < albums.length; index++) {
             albums[index].date = moment(albums[index].date).format("YYYY-MM-DD");
@@ -59,7 +57,5 @@ function pollAlbums() {
         }
 
         $("#albums").html(Mustache.render($("#albums-template").html(), {albums: albums}));
-    }).always(function () {
-        setTimeout(pollAlbums, 5000);
     });
 }
