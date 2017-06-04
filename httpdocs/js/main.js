@@ -22,7 +22,8 @@ $(function () {
     $("#upload-modal-form").on("submit", function (event) {
         event.preventDefault();
 
-        var album = $("#upload-modal").data("album");
+        var modal = $("#upload-modal");
+        var album = modal.data("album");
 
         $.post("upload", {
             year: album.year,
@@ -32,6 +33,8 @@ $(function () {
             text: $("#upload-modal-text").val(),
             isPublic: $("#upload-modal-public").is(":checked") ? 1 : 0,
             useAsYearCover: $("#upload-modal-year-cover").is(":checked") ? 1 : 0
+        }, function () {
+            modal.modal("hide");
         });
     });
 });
