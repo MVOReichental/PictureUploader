@@ -16,6 +16,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "mustache.js": "mustache#^2.3.0",
-    "moment": "momentjs#^2.18.1"
+    "moment": "momentjs#^2.18.1",
+    "font-awesome": "fontawesome#^4.7.0"
   }
 }

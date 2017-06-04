@@ -1,7 +1,8 @@
 #! /usr/bin/env php
 <?php
+use de\mvo\pictureuploader\Album;
+use de\mvo\pictureuploader\Albums;
 use de\mvo\pictureuploader\Config;
-use de\mvo\pictureuploader\Queue;
 
 require_once __DIR__ . "/../bootstrap.php";
 
@@ -13,9 +14,12 @@ if (!flock($lockFileHandle, LOCK_EX | LOCK_NB)) {
     exit;
 }
 
-$queue = Queue::get();
-
-$queue->process();
+/**
+ * @var $album Album
+ */
+foreach (Albums::getInQueue() as $album) {
+    $album->process();
+}
 
 fclose($lockFileHandle);
 unlink($lockFile);

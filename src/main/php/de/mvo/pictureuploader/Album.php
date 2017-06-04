@@ -7,16 +7,20 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
-class QueueItem
+class Album
 {
     /**
-     * @var Date
+     * @var string
      */
-    public $date;
+    public $year;
     /**
      * @var string
      */
     public $folder;
+    /**
+     * @var Date
+     */
+    public $date;
     /**
      * @var string
      */
@@ -25,29 +29,107 @@ class QueueItem
      * @var string
      */
     public $title;
+    /**
+     * @var string
+     */
+    public $text;
+    /**
+     * @var bool
+     */
+    public $isPublic;
+    /**
+     * @var bool
+     */
+    public $useAsYearCover;
 
-    public static function fromFile($filename)
+    public function __construct()
     {
-        $file = sprintf("%s/%s", Config::getValue(null, "queue"), basename($filename));
+        $this->date = new Date;
+        $this->date->setTime(0, 0);
+    }
 
-        if (!file_exists($file)) {
+    public static function getAlbumFromYearAndFoldername($year, $folder)
+    {
+        if (!preg_match("/^([0-9]+).([0-9]+).?(-[0-9\.]+)? (.*)$/", $folder, $matches)) {
             return null;
         }
 
-        return unserialize(file_get_contents($file));
+        $album = new self;
+
+        $album->date->setDate($year, $matches[1], $matches[2]);
+
+        $album->year = $year;
+        $album->folder = $folder;
+
+        $album->title = $matches[4];
+
+        $album->setNameFromTitle();
+
+        return $album;
     }
 
-    public function save()
+    public function load($filename = null)
     {
-        $data = serialize($this);
-
-        $queuePath = Config::getValue(null, "queue");
-
-        if (!is_dir($queuePath)) {
-            mkdir($queuePath, 0775, true);
+        if ($filename === null) {
+            $filename = $this->getJsonPath();
         }
 
-        file_put_contents(sprintf("%s/%s.serialize", $queuePath, md5($data)), $data);
+        if (!file_exists($filename)) {
+            return false;
+        }
+
+        $json = json_decode(file_get_contents($filename));
+
+        if ($this->year === null) {
+            $this->year = $json->year;
+        }
+
+        if ($this->folder === null) {
+            $this->folder = $json->folder;
+        }
+
+        $this->date = new Date($json->date);
+        $this->title = $json->title;
+        $this->text = $json->text;
+        $this->isPublic = $json->isPublic;
+        $this->useAsYearCover = $json->useAsYearCover;
+
+        return true;
+    }
+
+    public function setNameFromTitle()
+    {
+        $this->name = preg_replace("/[^a-z0-9\-\_\.]/", "-", str_replace(array("ä", "ö", "ü", "ß"), array("ae", "oe", "ue", "ss"), mb_strtolower($this->title)));
+    }
+
+    public function save($filename = null)
+    {
+        if ($filename === null) {
+            $filename = $this->getJsonPath();
+        }
+
+        $filesystem = new Filesystem;
+
+        $filesystem->dumpFile($filename, json_encode(array
+        (
+            "year" => $this->year,
+            "folder" => $this->folder,
+            "date" => $this->date->format("Y-m-d"),
+            "title" => $this->title,
+            "text" => $this->text,
+            "isPublic" => $this->isPublic,
+            "useAsYearCover" => $this->useAsYearCover
+        )));
+    }
+
+    public function getSourcePath()
+    {
+        return sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder);
+    }
+
+    public function getJsonPath()
+    {
+        return $this->getSourcePath() . "/album.json";
     }
 
     public function process()
@@ -66,7 +148,7 @@ class QueueItem
         $finder = new Finder;
 
         $finder->files();
-        $finder->in(sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder));
+        $finder->in($this->getSourcePath());
         $finder->depth("==0");
         $finder->name("/\.jpg/i");
 
