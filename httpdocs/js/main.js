@@ -15,18 +15,18 @@ $(function () {
             $("#upload-modal-public").prop("checked", data.isPublic);
             $("#upload-modal-year-cover").prop("checked", data.useAsYearCover);
 
-            $("#upload-modal").modal("show").data(data);
+            $("#upload-modal").modal("show").data("album", data);
         });
     });
 
     $("#upload-modal-form").on("submit", function (event) {
         event.preventDefault();
 
-        var modal = $("#upload-modal");
+        var album = $("#upload-modal").data("album");
 
         $.post("upload", {
-            year: modal.data("year"),
-            folder: modal.data("folder"),
+            year: album.year,
+            folder: album.folder,
             date: $("#upload-modal-date").val(),
             title: $("#upload-modal-title").val(),
             text: $("#upload-modal-text").val(),
