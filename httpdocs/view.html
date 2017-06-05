@@ -65,6 +65,18 @@
                 <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> Keine Alben verf&uuml;gbar.</div>
             {{/albums.length}}
         </script>
+
+        <script type="text/html" id="upload-modal-tab-albumcover-template">
+            <div class="row">
+                {{#pictures}}
+                    <div class="col-md-3">
+                        <a class="thumbnail {{#isCover}}active{{/isCover}}" data-hash="{{hash}}">
+                            <img src="{{url}}"/>
+                        </a>
+                    </div>
+                {{/pictures}}
+            </div>
+        </script>
     </head>
 
     <body>
@@ -88,38 +100,49 @@
                                 <h4 class="modal-title">Album hochladen</h4>
                             </div>
                             <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="upload-modal-folder">Verzeichnis</label>
-                                    <input type="text" class="form-control" id="upload-modal-folder" readonly/>
-                                </div>
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#upload-modal-tab-general">Allgemein</a></li>
+                                    <li><a href="#upload-modal-tab-albumcover">Albumcover</a></li>
+                                </ul>
 
-                                <div class="form-group">
-                                    <label for="upload-modal-title">Titel</label>
-                                    <input type="text" class="form-control" id="upload-modal-title" required/>
-                                </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="upload-modal-tab-general">
+                                        <div class="form-group">
+                                            <label for="upload-modal-folder">Verzeichnis</label>
+                                            <input type="text" class="form-control" id="upload-modal-folder" readonly/>
+                                        </div>
 
-                                <div class="form-group">
-                                    <label for="upload-modal-date">Datum</label>
-                                    <input type="date" class="form-control" id="upload-modal-date" required/>
-                                </div>
+                                        <div class="form-group">
+                                            <label for="upload-modal-title">Titel</label>
+                                            <input type="text" class="form-control" id="upload-modal-title" required/>
+                                        </div>
 
-                                <div class="form-group">
-                                    <label for="upload-modal-text">Text</label>
-                                    <textarea id="upload-modal-text" class="form-control" rows="5"></textarea>
-                                </div>
+                                        <div class="form-group">
+                                            <label for="upload-modal-date">Datum</label>
+                                            <input type="date" class="form-control" id="upload-modal-date" required/>
+                                        </div>
 
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="upload-modal-public"/>
-                                        &Ouml;ffentlich sichtbar
-                                    </label>
-                                </div>
+                                        <div class="form-group">
+                                            <label for="upload-modal-text">Text</label>
+                                            <textarea id="upload-modal-text" class="form-control" rows="5"></textarea>
+                                        </div>
 
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="upload-modal-year-cover"/>
-                                        Albumcover als Jahrescover verwenden
-                                    </label>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="upload-modal-public"/>
+                                                &Ouml;ffentlich sichtbar
+                                            </label>
+                                        </div>
+
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="upload-modal-year-cover"/>
+                                                Albumcover als Jahrescover verwenden
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="upload-modal-tab-albumcover"></div>
                                 </div>
                             </div>
                             <div class="modal-footer">

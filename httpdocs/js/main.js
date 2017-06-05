@@ -4,6 +4,11 @@ $(function () {
     updateData();
     setInterval(updateData, 5000);
 
+    $("#upload-modal").find(".modal-body a").click(function (event) {
+        event.preventDefault();
+        $(this).tab("show")
+    });
+
     $("#albums").on("click", ".upload-album", function () {
         var row = $(this).closest("tr");
 
@@ -15,8 +20,18 @@ $(function () {
             $("#upload-modal-public").prop("checked", data.isPublic);
             $("#upload-modal-year-cover").prop("checked", data.useAsYearCover);
 
+            $("#upload-modal-tab-albumcover").html(Mustache.render($("#upload-modal-tab-albumcover-template").html(), {
+                pictures: data.pictures
+            }));
+
             $("#upload-modal").modal("show").data("album", data);
         });
+    });
+
+    $("#upload-modal-tab-albumcover").on("click", ".thumbnail", function () {
+        $("#upload-modal-tab-albumcover").find(".thumbnail").removeClass("active");
+
+        $(this).addClass("active");
     });
 
     $("#upload-modal-form").on("submit", function (event) {
@@ -25,12 +40,21 @@ $(function () {
         var modal = $("#upload-modal");
         var album = modal.data("album");
 
+        var coverPicture = null;
+
+        $("#upload-modal-tab-albumcover").find(".thumbnail").each(function () {
+            if ($(this).hasClass("active")) {
+                coverPicture = $(this).data("hash");
+            }
+        });
+
         $.post("upload", {
             year: album.year,
             folder: album.folder,
             date: $("#upload-modal-date").val(),
             title: $("#upload-modal-title").val(),
             text: $("#upload-modal-text").val(),
+            coverPicture: coverPicture,
             isPublic: $("#upload-modal-public").is(":checked") ? 1 : 0,
             useAsYearCover: $("#upload-modal-year-cover").is(":checked") ? 1 : 0
         }, function () {

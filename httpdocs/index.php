@@ -11,6 +11,7 @@ $router->map("GET", "/", "html");
 $router->map("GET", "/albums.json", "albums");
 $router->map("GET", "/album.json", "album");
 $router->map("GET", "/queue.json", "queue");
+$router->map("GET", "/picture.jpg", "picture");
 $router->map("POST", "/upload", "upload");
 
 $match = $router->match();
@@ -41,11 +42,34 @@ switch ($match["target"]) {
 
         $album->load();
 
-        echo json_encode($album);
+        $albumArray = (array)$album;
+
+        $albumArray["pictures"] = $album->getPictures();
+
+        echo json_encode($albumArray);
         break;
     case "queue":
         header("Content-Type: application/json");
         echo json_encode((array)Albums::getInQueue());
+        break;
+    case "picture":
+        if (!isset($_GET["year"]) or !isset($_GET["folder"]) or !isset($_GET["filename"]) or !$_GET["year"] or !$_GET["folder"] or !$_GET["filename"]) {
+            http_response_code(400);
+            echo "Missing or empty 'year', 'folder' and 'filename' parameters!";
+            break;
+        }
+
+        $album = Album::getAlbumFromYearAndFoldername($_GET["year"], $_GET["folder"]);
+
+        $filename = $album->getSourcePath() . "/" . basename($_GET["filename"]);
+        if (!file_exists($filename)) {
+            http_response_code(404);
+            echo "Picture not found!";
+            break;
+        }
+
+        header("Content-Type: image/jpeg");
+        readfile($filename);
         break;
     case "upload":
         if (!isset($_POST["year"]) or !isset($_POST["folder"]) or !$_POST["year"] or !$_POST["folder"]) {
@@ -70,6 +94,10 @@ switch ($match["target"]) {
 
         if (isset($_POST["text"])) {
             $album->text = $_POST["text"];
+        }
+
+        if (isset($_POST["coverPicture"])) {
+            $album->coverPicture = $_POST["coverPicture"];
         }
 
         if (isset($_POST["isPublic"])) {

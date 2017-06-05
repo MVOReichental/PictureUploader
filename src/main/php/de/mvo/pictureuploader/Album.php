@@ -1,7 +1,6 @@
 <?php
 namespace de\mvo\pictureuploader;
 
-use de\mvo\pictureuploader\image\Resizer;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -33,6 +32,10 @@ class Album
      * @var string
      */
     public $text;
+    /**
+     * @var string
+     */
+    public $coverPicture;
     /**
      * @var bool
      */
@@ -91,6 +94,7 @@ class Album
         $this->date = new Date($json->date);
         $this->title = $json->title;
         $this->text = $json->text;
+        $this->coverPicture = $json->coverPicture;
         $this->isPublic = $json->isPublic;
         $this->useAsYearCover = $json->useAsYearCover;
 
@@ -117,6 +121,7 @@ class Album
             "date" => $this->date->format("Y-m-d"),
             "title" => $this->title,
             "text" => $this->text,
+            "coverPicture" => $this->coverPicture,
             "isPublic" => $this->isPublic,
             "useAsYearCover" => $this->useAsYearCover
         )));
@@ -132,6 +137,33 @@ class Album
         return $this->getSourcePath() . "/album.json";
     }
 
+    /**
+     * @return Picture[]
+     */
+    public function getPictures()
+    {
+        $finder = new Finder;
+
+        $finder->files();
+        $finder->in($this->getSourcePath());
+        $finder->depth("==0");
+        $finder->name("/\.jpg/i");
+
+        $pictures = array();
+
+        foreach ($finder as $item) {
+            $picture = new Picture($item->getPathname());
+
+            $picture->url = sprintf("picture.jpg?year=%d&folder=%s&filename=%s", $this->year, $this->folder, $item->getFilename());
+
+            $picture->isCover = ($this->coverPicture === $picture->hash);
+
+            $pictures[] = $picture;
+        }
+
+        return $pictures;
+    }
+
     public function process()
     {
         $cachePath = sprintf("%s/%d/%s", Config::getValue(null, "pictures-cache"), $this->date->format("Y"), $this->name);
@@ -145,37 +177,28 @@ class Album
 
         $filesystem = new Filesystem;
 
-        $finder = new Finder;
-
-        $finder->files();
-        $finder->in($this->getSourcePath());
-        $finder->depth("==0");
-        $finder->name("/\.jpg/i");
-
         $validFiles = array();
 
-        foreach ($finder as $item) {
-            $originalFile = $item->getPathname();
+        $pictures = $this->getPictures();
 
-            $md5 = md5_file($originalFile);
-
-            $largeFile = sprintf("%s/%s_large.jpg", $cachePath, $md5);
-            $smallFile = sprintf("%s/%s_small.jpg", $cachePath, $md5);
+        foreach ($pictures as $picture) {
+            $largeFile = sprintf("%s/%s_large.jpg", $cachePath, $picture->hash);
+            $smallFile = sprintf("%s/%s_small.jpg", $cachePath, $picture->hash);
 
             $validFiles[] = $largeFile;
             $validFiles[] = $smallFile;
 
-            $resizer = new Resizer($originalFile);
+            $resizer = $picture->getResizer();
 
             if (!is_file($largeFile)) {
-                Logger::log(sprintf("Saving large version of %s to %s", $originalFile, $largeFile));
+                Logger::log(sprintf("Saving large version of %s to %s", $picture->originalFilename, $largeFile));
                 if (!imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile)) {
                     throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
                 }
             }
 
             if (!is_file($smallFile)) {
-                Logger::log(sprintf("Saving small version of %s to %s", $originalFile, $smallFile));
+                Logger::log(sprintf("Saving small version of %s to %s", $picture->originalFilename, $smallFile));
                 if (!imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile)) {
                     throw new RuntimeException(sprintf("Unable to save picture to %s", $smallFile));
                 }
