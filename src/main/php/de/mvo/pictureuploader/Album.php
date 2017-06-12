@@ -44,6 +44,10 @@ class Album
      * @var bool
      */
     public $useAsYearCover;
+    /**
+     * @var Picture[]
+     */
+    public $pictures;
 
     public function __construct()
     {
@@ -98,6 +102,17 @@ class Album
         $this->isPublic = $json->isPublic;
         $this->useAsYearCover = $json->useAsYearCover;
 
+        $this->pictures = array();
+
+        foreach ($json->pictures as $pictureJson) {
+            $picture = new Picture;
+
+            $picture->filename = $pictureJson->filename;
+            $picture->hash = $pictureJson->hash;
+
+            $this->pictures[] = $picture;
+        }
+
         return true;
     }
 
@@ -106,11 +121,9 @@ class Album
         $this->name = preg_replace("/[^a-z0-9\-\_\.]/", "-", str_replace(array("ä", "ö", "ü", "ß"), array("ae", "oe", "ue", "ss"), mb_strtolower($this->title)));
     }
 
-    public function save($filename = null)
+    public function save()
     {
-        if ($filename === null) {
-            $filename = $this->getJsonPath();
-        }
+        $filename = $this->getJsonPath();
 
         $filesystem = new Filesystem;
 
@@ -123,8 +136,11 @@ class Album
             "text" => $this->text,
             "coverPicture" => $this->coverPicture,
             "isPublic" => $this->isPublic,
-            "useAsYearCover" => $this->useAsYearCover
+            "useAsYearCover" => $this->useAsYearCover,
+            "pictures" => $this->pictures
         )));
+
+        return $filename;
     }
 
     public function getSourcePath()
@@ -137,10 +153,7 @@ class Album
         return $this->getSourcePath() . "/album.json";
     }
 
-    /**
-     * @return Picture[]
-     */
-    public function getPictures()
+    public function updatePictures()
     {
         $finder = new Finder;
 
@@ -149,19 +162,20 @@ class Album
         $finder->depth("==0");
         $finder->name("/\.jpg/i");
 
-        $pictures = array();
+        $this->pictures = array();
 
         foreach ($finder as $item) {
-            $picture = new Picture($item->getPathname());
+            $picture = new Picture;
+
+            $picture->filename = $item->getPathname();
+            $picture->updateHash();
 
             $picture->url = sprintf("picture.jpg?year=%d&folder=%s&filename=%s", $this->year, $this->folder, $item->getFilename());
 
             $picture->isCover = ($this->coverPicture === $picture->hash);
 
-            $pictures[] = $picture;
+            $this->pictures[] = $picture;
         }
-
-        return $pictures;
     }
 
     public function process()
@@ -179,9 +193,7 @@ class Album
 
         $validFiles = array();
 
-        $pictures = $this->getPictures();
-
-        foreach ($pictures as $picture) {
+        foreach ($this->pictures as $picture) {
             $largeFile = sprintf("%s/%s_large.jpg", $cachePath, $picture->hash);
             $smallFile = sprintf("%s/%s_small.jpg", $cachePath, $picture->hash);
 
@@ -191,14 +203,14 @@ class Album
             $resizer = $picture->getResizer();
 
             if (!is_file($largeFile)) {
-                Logger::log(sprintf("Saving large version of %s to %s", $picture->originalFilename, $largeFile));
+                Logger::log(sprintf("Saving large version of %s to %s", $picture->filename, $largeFile));
                 if (!imagejpeg($resizer->resize($largeWidth, $largeHeight), $largeFile)) {
                     throw new RuntimeException(sprintf("Unable to save picture to %s", $largeFile));
                 }
             }
 
             if (!is_file($smallFile)) {
-                Logger::log(sprintf("Saving small version of %s to %s", $picture->originalFilename, $smallFile));
+                Logger::log(sprintf("Saving small version of %s to %s", $picture->filename, $smallFile));
                 if (!imagejpeg($resizer->resize($smallWidth, $smallHeight), $smallFile)) {
                     throw new RuntimeException(sprintf("Unable to save picture to %s", $smallFile));
                 }

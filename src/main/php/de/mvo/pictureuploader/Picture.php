@@ -8,7 +8,7 @@ class Picture
     /**
      * @var string
      */
-    public $originalFilename;
+    public $filename;
     /**
      * @var string
      */
@@ -22,14 +22,13 @@ class Picture
      */
     public $isCover;
 
-    public function __construct($originalFilename)
+    public function updateHash()
     {
-        $this->originalFilename = $originalFilename;
-        $this->hash = md5_file($this->originalFilename);
+        $this->hash = md5_file($this->filename);
     }
 
     public function getResizer()
     {
-        return new Resizer($this->originalFilename);
+        return new Resizer($this->filename);
     }
 }

@@ -2,6 +2,8 @@
 use de\mvo\pictureuploader\Album;
 use de\mvo\pictureuploader\Albums;
 use de\mvo\pictureuploader\Config;
+use de\mvo\pictureuploader\image\Resizer;
+use Symfony\Component\Filesystem\Filesystem;
 
 require_once __DIR__ . "/../bootstrap.php";
 
@@ -41,12 +43,10 @@ switch ($match["target"]) {
         $album = Album::getAlbumFromYearAndFoldername($_GET["year"], $_GET["folder"]);
 
         $album->load();
+        $album->updatePictures();
+        $album->save();
 
-        $albumArray = (array)$album;
-
-        $albumArray["pictures"] = $album->getPictures();
-
-        echo json_encode($albumArray);
+        echo json_encode($album);
         break;
     case "queue":
         header("Content-Type: application/json");
@@ -68,8 +68,10 @@ switch ($match["target"]) {
             break;
         }
 
+        $resizer = new Resizer($filename);
+
         header("Content-Type: image/jpeg");
-        readfile($filename);
+        imagejpeg($resizer->resize(200, 200));
         break;
     case "upload":
         if (!isset($_POST["year"]) or !isset($_POST["folder"]) or !$_POST["year"] or !$_POST["folder"]) {
@@ -108,7 +110,10 @@ switch ($match["target"]) {
             $album->useAsYearCover = (bool)$_POST["useAsYearCover"];
         }
 
-        $album->save();
-        $album->save(sprintf("%s/%s.json", Config::getValue(null, "queue"), uniqid()));
+        $jsonFile = $album->save();
+
+        $filesystem = new Filesystem;
+
+        $filesystem->copy($jsonFile, sprintf("%s/%s.json", Config::getValue(null, "queue"), uniqid()));
         break;
 }

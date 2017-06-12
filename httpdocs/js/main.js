@@ -29,9 +29,9 @@ $(function () {
     });
 
     $("#upload-modal-tab-albumcover").on("click", ".thumbnail", function () {
-        $("#upload-modal-tab-albumcover").find(".thumbnail").removeClass("active");
+        $("#upload-modal-tab-albumcover").find(".active-album-cover").addClass("hidden");
 
-        $(this).addClass("active");
+        $(this).find(".active-album-cover").removeClass("hidden");
     });
 
     $("#upload-modal-form").on("submit", function (event) {
