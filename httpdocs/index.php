@@ -110,6 +110,8 @@ switch ($match["target"]) {
             $album->useAsYearCover = (bool)$_POST["useAsYearCover"];
         }
 
+        $album->updatePictures();
+
         $jsonFile = $album->save();
 
         $filesystem = new Filesystem;
