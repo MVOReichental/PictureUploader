@@ -245,7 +245,7 @@ class Album
         foreach ($this->pictures as $picture) {
             $pictures[] = array
             (
-                "file" => $picture->hash,
+                "hash" => $picture->hash,
                 "title" => ""// TODO
             );
         }
