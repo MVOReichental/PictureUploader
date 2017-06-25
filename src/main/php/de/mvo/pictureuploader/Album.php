@@ -96,6 +96,7 @@ class Album
         }
 
         $this->date = new Date($json->date);
+        $this->name = $json->name;
         $this->title = $json->title;
         $this->text = $json->text;
         $this->coverPicture = $json->coverPicture;
@@ -132,6 +133,7 @@ class Album
             "year" => $this->year,
             "folder" => $this->folder,
             "date" => $this->date->format("Y-m-d"),
+            "name" => $this->name,
             "title" => $this->title,
             "text" => $this->text,
             "coverPicture" => $this->coverPicture,
