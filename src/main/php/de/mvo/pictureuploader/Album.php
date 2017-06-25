@@ -280,7 +280,11 @@ class Album
             escapeshellarg(sprintf("%s@%s:%s/", $sshUser, $host, $remotePath))
         );
 
-        $process = new Process(implode(" ", $rsyncCommand));
+        $rsyncCommand = implode(" ", $rsyncCommand);
+
+        Logger::log(sprintf("Executing rsync: %s", $rsyncCommand));
+
+        $process = new Process($rsyncCommand);
         $process->mustRun(function ($type, $data) {
             fwrite($type == Process::ERR ? STDERR : STDOUT, $data);
         });
