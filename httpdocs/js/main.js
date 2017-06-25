@@ -10,6 +10,9 @@ $(function () {
     });
 
     $("#albums").on("click", ".upload-album", function () {
+        $("#upload-modal").data("loading", true);
+        $("#albums").find(".upload-album").prop("disabled", true);
+
         var row = $(this).closest("tr");
 
         $.get("album.json?year=" + row.data("year") + "&folder=" + row.data("folder"), function (data) {
@@ -25,6 +28,9 @@ $(function () {
             }));
 
             $("#upload-modal").modal("show").data("album", data);
+        }).always(function () {
+            $("#upload-modal").data("loading", false);
+            $("#albums").find(".upload-album").prop("disabled", false);
         });
     });
 
@@ -80,6 +86,12 @@ function updateData() {
             albums[index].formattedDate = moment(albums[index].date).format("LL");
         }
 
-        $("#albums").html(Mustache.render($("#albums-template").html(), {albums: albums}));
+        var albumsContainer = $("#albums");
+
+        albumsContainer.html(Mustache.render($("#albums-template").html(), {albums: albums}));
+
+        if ($("#upload-modal").data("loading")) {
+            albumsContainer.find(".upload-album").prop("disabled", true);
+        }
     });
 }
