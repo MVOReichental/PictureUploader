@@ -277,7 +277,7 @@ class Album
             sprintf("--rsync-path %s", escapeshellarg(sprintf("mkdir -p %s && rsync", $remotePath))),
             sprintf("-e %s", escapeshellarg(sprintf("ssh -i %s", $sshKey))),
             escapeshellarg($cachePath),
-            escapeshellarg(sprintf("%s@%s:%s", $sshUser, $host, $remotePath))
+            escapeshellarg(sprintf("%s@%s:%s/", $sshUser, $host, $remotePath))
         );
 
         $process = new Process(implode(" ", $rsyncCommand));
