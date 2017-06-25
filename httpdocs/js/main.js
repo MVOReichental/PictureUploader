@@ -43,6 +43,8 @@ $(function () {
     $("#upload-modal-form").on("submit", function (event) {
         event.preventDefault();
 
+        $(this).prop("disabled", true);
+
         var modal = $("#upload-modal");
         var album = modal.data("album");
 
@@ -67,6 +69,8 @@ $(function () {
             updateData();
 
             modal.modal("hide");
+        }).always(function () {
+            $(this).prop("disabled", false);
         });
     });
 });
