@@ -234,6 +234,26 @@ class Album
             $filesystem->remove($item->getPathname());
         }
 
+        $pictures = array();
+
+        foreach ($this->pictures as $picture) {
+            $pictures[] = array
+            (
+                "file" => $picture->hash,
+                "title" => ""// TODO
+            );
+        }
+
+        $filesystem->dumpFile(sprintf("%s/album.json", $cachePath), json_encode(array
+        (
+            "title" => $this->title,
+            "text" => $this->text,
+            "isPublic" => $this->isPublic,
+            "useAsYearCover" => $this->useAsYearCover,
+            "date" => $this->date->format("Y-m-d"),
+            "pictures" => $pictures
+        )));
+
         $remoteAppDir = Config::getValue(null, "remote-app-dir");
         $logFile = Config::getValue(null, "rsync-log");
         $remotePath = sprintf("%s/httpdocs/pictures/%s/%s", $remoteAppDir, $this->date->format("Y"), $this->name);
