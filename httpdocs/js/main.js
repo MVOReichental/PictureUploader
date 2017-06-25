@@ -51,7 +51,7 @@ $(function () {
         var coverPicture = null;
 
         $("#upload-modal-tab-albumcover").find(".thumbnail").each(function () {
-            if ($(this).hasClass("active")) {
+            if (!$(this).find(".active-album-cover").hasClass("hidden")) {
                 coverPicture = $(this).data("hash");
             }
         });
