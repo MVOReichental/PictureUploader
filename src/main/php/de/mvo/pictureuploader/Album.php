@@ -48,6 +48,10 @@ class Album
      * @var Picture[]
      */
     public $pictures;
+    /**
+     * @var string
+     */
+    public $filename;
 
     public function __construct()
     {
@@ -84,6 +88,8 @@ class Album
         if (!file_exists($filename)) {
             return false;
         }
+
+        $this->filename = $filename;
 
         $json = json_decode(file_get_contents($filename));
 

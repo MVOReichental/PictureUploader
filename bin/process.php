@@ -19,6 +19,8 @@ if (!flock($lockFileHandle, LOCK_EX | LOCK_NB)) {
  */
 foreach (Albums::getInQueue() as $album) {
     $album->process();
+
+    unlink($album->filename);
 }
 
 fclose($lockFileHandle);
