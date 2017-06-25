@@ -256,6 +256,7 @@ class Album
             "text" => $this->text,
             "isPublic" => $this->isPublic,
             "useAsYearCover" => $this->useAsYearCover,
+            "coverPicture" => $this->coverPicture,
             "date" => $this->date->format("Y-m-d"),
             "pictures" => $pictures
         )));
