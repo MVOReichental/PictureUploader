@@ -276,7 +276,7 @@ class Album
             sprintf("--log-file %s", escapeshellarg($logFile)),
             sprintf("--rsync-path %s", escapeshellarg(sprintf("mkdir -p %s && rsync", $remotePath))),
             sprintf("-e %s", escapeshellarg(sprintf("ssh -i %s", $sshKey))),
-            escapeshellarg($cachePath),
+            escapeshellarg(sprintf("%s/", $cachePath)),
             escapeshellarg(sprintf("%s@%s:%s/", $sshUser, $host, $remotePath))
         );
 
