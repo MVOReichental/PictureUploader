@@ -150,7 +150,7 @@ class Album
 
     public function getJsonPath()
     {
-        return $this->getSourcePath() . "/album.json";
+        return sprintf("%s/albums/%d/%s.json", RESOURCES_ROOT, $this->date->format("Y"), $this->folder);
     }
 
     public function updatePictures()
