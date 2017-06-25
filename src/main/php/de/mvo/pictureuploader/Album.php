@@ -161,6 +161,7 @@ class Album
         $finder->in($this->getSourcePath());
         $finder->depth("==0");
         $finder->name("/\.jpg/i");
+        $finder->sortByName();
 
         $this->pictures = array();
 
