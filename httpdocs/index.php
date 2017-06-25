@@ -88,6 +88,8 @@ switch ($match["target"]) {
             exit;
         }
 
+        $album->load();
+
         if (isset($_POST["title"])) {
             $album->title = $_POST["title"];
 
@@ -109,8 +111,6 @@ switch ($match["target"]) {
         if (isset($_POST["useAsYearCover"])) {
             $album->useAsYearCover = (bool)$_POST["useAsYearCover"];
         }
-
-        $album->updatePictures();
 
         $jsonFile = $album->save();
 
