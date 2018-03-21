@@ -101,3 +101,7 @@ exec { "npm_install":
   environment => ["HOME=/home/vagrant"],
   require     => Class["nodejs"],
 }
+
+file { "/opt/mvo-picture-uploader/src/main/resources/config.ini":
+  source => "/opt/mvo-picture-uploader/vagrant/config.ini",
+}
