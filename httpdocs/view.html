@@ -72,7 +72,7 @@
                         <a class="thumbnail" data-hash="{{hash}}">
                             <div class="card">
                                 <img class="img-fluid card-img" src="{{url}}">
-                                <div class="card-img-overlay active-album-cover {{^isCover}}d-none{{/isCover}}">
+                                <div class="card-img-overlay active-album-cover {{#isCover}}d-flex{{/isCover}}{{^isCover}}d-none{{/isCover}}">
                                     <div class="my-auto mx-auto text-center">
                                         <span class="fa-stack fa-lg">
                                             <i class="fas fa-circle fa-stack-2x"></i>
