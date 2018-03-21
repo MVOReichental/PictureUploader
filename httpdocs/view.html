@@ -3,15 +3,15 @@
     <head>
         <title>MVO Picture Uploader</title>
 
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous"/>
 
         <link rel="stylesheet" href="css/main.css"/>
 
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="bower_components/mustache.js/mustache.min.js"></script>
-        <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="node_modules/mustache/mustache.min.js"></script>
+        <script src="node_modules/moment/min/moment-with-locales.min.js"></script>
 
         <script src="js/main.js"></script>
 
@@ -54,29 +54,32 @@
                             <tr data-date="{{date}}" data-year="{{year}}" data-folder="{{folder}}">
                                 <td class="album-date">{{formattedDate}}</td>
                                 <td class="album-title">{{title}}</td>
-                                <th><button class="btn btn-success btn-xs upload-album"><i class="fa fa-upload"></i> Hochladen</button></th>
+                                <th><button class="btn btn-success btn-xs upload-album"><i class="fas fa-upload"></i> Hochladen</button></th>
                             </tr>
                         {{/albums}}
                     </tbody>
                 </table>
             {{/albums.length}}
             {{^albums.length}}
-                <div class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> Keine Alben verf&uuml;gbar.</div>
+                <div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i> Keine Alben verf&uuml;gbar.</div>
             {{/albums.length}}
         </script>
 
         <script type="text/html" id="upload-modal-tab-albumcover-template">
             <div class="row">
                 {{#pictures}}
-                    <div class="col-md-3">
+                    <div class="col-sm-6 col-md-4 mt-3">
                         <a class="thumbnail" data-hash="{{hash}}">
-                            <img src="{{url}}"/>
-
-                            <div class="active-album-cover {{^isCover}}hidden{{/isCover}}">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-check fa-stack-1x fa-inverse"></i>
-                                </span>
+                            <div class="card">
+                                <img class="img-fluid card-img" src="{{url}}">
+                                <div class="card-img-overlay active-album-cover {{^isCover}}d-none{{/isCover}}">
+                                    <div class="my-auto mx-auto text-center">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fas fa-check fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </a>
                     </div>
@@ -102,13 +105,13 @@
                     <form id="upload-modal-form">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title">Album hochladen</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
                             </div>
                             <div class="modal-body">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#upload-modal-tab-general">Allgemein</a></li>
-                                    <li><a href="#upload-modal-tab-albumcover">Albumcover</a></li>
+                                    <li class="nav-item"><a class="nav-link active" href="#upload-modal-tab-general">Allgemein</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#upload-modal-tab-albumcover">Albumcover</a></li>
                                 </ul>
 
                                 <div class="tab-content">

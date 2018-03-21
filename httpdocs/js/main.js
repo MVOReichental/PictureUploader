@@ -35,9 +35,9 @@ $(function () {
     });
 
     $("#upload-modal-tab-albumcover").on("click", ".thumbnail", function () {
-        $("#upload-modal-tab-albumcover").find(".active-album-cover").addClass("hidden");
+        $("#upload-modal-tab-albumcover").find(".active-album-cover").removeClass("d-flex").addClass("d-none");
 
-        $(this).find(".active-album-cover").removeClass("hidden");
+        $(this).find(".active-album-cover").removeClass("d-none").addClass("d-flex");
     });
 
     $("#upload-modal-form").on("submit", function (event) {
@@ -51,7 +51,7 @@ $(function () {
         var coverPicture = null;
 
         $("#upload-modal-tab-albumcover").find(".thumbnail").each(function () {
-            if (!$(this).find(".active-album-cover").hasClass("hidden")) {
+            if (!$(this).find(".active-album-cover").hasClass("d-none")) {
                 coverPicture = $(this).data("hash");
             }
         });

@@ -1,5 +1,5 @@
 /.idea/
 /.vagrant/
-/httpdocs/bower_components/
+/httpdocs/node_modules/
 /src/main/resources/config.ini
 /vendor/
