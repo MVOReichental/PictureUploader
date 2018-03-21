@@ -287,12 +287,12 @@ class Album
 
         $process = new Process($rsyncCommand);
         $process->mustRun(function ($type, $data) {
-            fwrite($type == Process::ERR ? STDERR : STDOUT, $data);
+            fwrite($type === Process::ERR ? STDERR : STDOUT, $data);
         });
 
         $process = new Process(sprintf("ssh -i %s %s %s", escapeshellarg($sshKey), escapeshellarg($sshUser . "@" . $host), escapeshellarg($updateScript)));
         $process->mustRun(function ($type, $data) {
-            fwrite($type == Process::ERR ? STDERR : STDOUT, $data);
+            fwrite($type === Process::ERR ? STDERR : STDOUT, $data);
         });
     }
 }
