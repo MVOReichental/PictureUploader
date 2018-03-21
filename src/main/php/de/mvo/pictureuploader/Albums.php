@@ -24,7 +24,7 @@ class Albums extends ArrayObject
                     continue;
                 }
 
-                if ($item->getFilename()[0] == ".") {
+                if ($item->getFilename()[0] === ".") {
                     continue;
                 }
 
