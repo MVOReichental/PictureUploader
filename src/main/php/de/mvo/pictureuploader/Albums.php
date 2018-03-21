@@ -71,6 +71,10 @@ class Albums extends ArrayObject
                     continue;
                 }
 
+                if ($item->getFilename()[0] === ".") {
+                    continue;
+                }
+
                 $album = new Album;
 
                 if (!$album->load($item->getPathname())) {
