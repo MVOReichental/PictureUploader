@@ -6,5 +6,7 @@ define("RESOURCES_ROOT", __DIR__ . "/src/main/resources");
 define("HTTPDOCS_ROOT", __DIR__ . "/httpdocs");
 
 define("VIEWS_ROOT", RESOURCES_ROOT . "/views");
+define("ALBUMS_ROOT", RESOURCES_ROOT . "/albums");
+define("QUEUE_ROOT", RESOURCES_ROOT. "/queue");
 
 define("APP_NAMESPACE", "de\\mvo\\pictureuploader");

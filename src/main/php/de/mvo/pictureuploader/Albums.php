@@ -61,10 +61,8 @@ class Albums extends ArrayObject
     {
         $list = new self;
 
-        $queuePath = Config::getValue(null, "queue");
-
-        if (is_dir($queuePath)) {
-            foreach (new DirectoryIterator($queuePath) as $item) {
+        if (is_dir(QUEUE_ROOT)) {
+            foreach (new DirectoryIterator(QUEUE_ROOT) as $item) {
                 if ($item->isDot()) {
                     continue;
                 }

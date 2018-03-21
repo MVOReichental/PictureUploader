@@ -116,6 +116,6 @@ switch ($match["target"]) {
 
         $filesystem = new Filesystem;
 
-        $filesystem->copy($jsonFile, sprintf("%s/%s.json", Config::getValue(null, "queue"), uniqid()));
+        $filesystem->copy($jsonFile, sprintf("%s/%s.json", QUEUE_ROOT, uniqid()));
         break;
 }
