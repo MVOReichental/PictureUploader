@@ -60,7 +60,7 @@ foreach (Albums::get() as $album) {
     $album->coverPicture = $oldJson->pictures[$dbAlbum->coverPicture - 1];
     $album->useAsYearCover = false;
 
-    $album->save();
+    $jsonFile = $album->save();
 
     $filesystem = new Filesystem;
 
