@@ -28,6 +28,9 @@ while (true) {
      */
     $album = $queue->offsetGet(0);
 
+    // Force loading album from album json instead of queue json
+    $album->load();
+
     $album->process();
 
     unlink($album->filename);
