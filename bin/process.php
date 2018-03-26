@@ -14,13 +14,30 @@ if (!flock($lockFileHandle, LOCK_EX | LOCK_NB)) {
     exit;
 }
 
-/**
- * @var $album Album
- */
-foreach (Albums::getInQueue() as $album) {
+$iteration = 0;
+
+while (true) {
+    $queue = Albums::getInQueue();
+
+    if (!$queue->count()) {
+        break;
+    }
+
+    /**
+     * @var $album Album
+     */
+    $album = $queue->offsetGet(0);
+
     $album->process();
 
     unlink($album->filename);
+
+    $iteration++;
+
+    // Give up after 100 processed albums (something must go really wrong!)
+    if ($iteration >= 100) {
+        break;
+    }
 }
 
 fclose($lockFileHandle);
