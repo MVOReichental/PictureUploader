@@ -46,6 +46,7 @@
                         <tr>
                             <th>Datum</th>
                             <th>Titel</th>
+                            <th>Status</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -54,6 +55,10 @@
                             <tr data-date="{{date}}" data-year="{{year}}" data-folder="{{folder}}">
                                 <td class="album-date">{{formattedDate}}</td>
                                 <td class="album-title">{{title}}</td>
+                                <td>
+                                    {{#filename}}<span class="badge badge-primary">Hochgeladen</span>{{/filename}}
+                                    {{^filename}}<span class="badge badge-success">Neu</span>{{/filename}}
+                                </td>
                                 <th><button class="btn btn-success btn-xs upload-album"><i class="fas fa-upload"></i> Hochladen</button></th>
                             </tr>
                         {{/albums}}
