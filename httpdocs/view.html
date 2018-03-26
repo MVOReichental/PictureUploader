@@ -55,8 +55,13 @@
                             <tr data-date="{{date}}" data-year="{{year}}" data-folder="{{folder}}">
                                 <td class="album-date">{{formattedDate}}</td>
                                 <td class="album-title">{{title}}</td>
-                                <td>
-                                    {{#isUploaded}}<span class="badge badge-primary">Hochgeladen</span>{{/isUploaded}}
+                                <td class="text-nowrap">
+                                    {{#isUploaded}}
+                                        {{#isPublic}}<span class="badge badge-success">&Ouml;ffentlich</span>{{/isPublic}}
+                                        {{^isPublic}}<span class="badge badge-danger">Intern</span>{{/isPublic}}
+
+                                        <span class="badge badge-primary">Hochgeladen</span>
+                                    {{/isUploaded}}
                                     {{^filename}}<span class="badge badge-success">Neu</span>{{/filename}}
                                 </td>
                                 <td><button class="btn btn-success btn-xs upload-album"><i class="fas fa-upload"></i> Hochladen</button></td>
