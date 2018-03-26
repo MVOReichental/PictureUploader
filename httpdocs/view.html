@@ -56,8 +56,8 @@
                                 <td class="album-date">{{formattedDate}}</td>
                                 <td class="album-title">{{title}}</td>
                                 <td>
-                                    {{#filename}}<span class="badge badge-primary">Hochgeladen</span>{{/filename}}
-                                    {{^filename}}<span class="badge badge-success">Neu</span>{{/filename}}
+                                    {{#isUploaded}}<span class="badge badge-primary">Hochgeladen</span>{{/isUploaded}}
+                                    {{^isUploaded}}<span class="badge badge-success">Neu</span>{{/isUploaded}}
                                 </td>
                                 <td><button class="btn btn-success btn-xs upload-album"><i class="fas fa-upload"></i> Hochladen</button></td>
                             </tr>

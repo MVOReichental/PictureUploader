@@ -52,6 +52,10 @@ class Album
      * @var string
      */
     public $filename;
+    /**
+     * @var bool
+     */
+    public $isUploaded = false;
 
     public function __construct()
     {
@@ -108,6 +112,7 @@ class Album
         $this->coverPicture = $json->coverPicture;
         $this->isPublic = $json->isPublic;
         $this->useAsYearCover = $json->useAsYearCover;
+        $this->isUploaded = $json->isUploaded;
 
         $this->pictures = array();
 
@@ -145,6 +150,7 @@ class Album
             "coverPicture" => $this->coverPicture,
             "isPublic" => $this->isPublic,
             "useAsYearCover" => $this->useAsYearCover,
+            "isUploaded" => $this->isUploaded,
             "pictures" => $this->pictures
         )));
 
@@ -294,5 +300,12 @@ class Album
         $process->mustRun(function ($type, $data) {
             fwrite($type === Process::ERR ? STDERR : STDOUT, $data);
         });
+
+        // Load again before save to prevent overwriting changes done while uploading
+        $this->load();
+
+        $this->isUploaded = true;
+
+        $this->save();
     }
 }
