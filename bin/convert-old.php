@@ -66,5 +66,5 @@ foreach (Albums::get() as $album) {
 
     $filesystem->copy($jsonFile, sprintf("%s/%s.json", QUEUE_ROOT, uniqid()));
 
-    printf("%d|%d|%s", $dbId, $album->date->format("Y"), $album->name);
+    printf("%d|%d|%s\n", $dbId, $album->date->format("Y"), $album->name);
 }
