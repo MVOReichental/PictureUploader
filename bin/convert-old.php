@@ -45,7 +45,7 @@ foreach (Albums::get() as $album) {
         continue;
     }
 
-    printf("Converting album in path %s\n", $album->getSourcePath());
+    fwrite(STDERR, sprintf("Converting album in path %s\n", $album->getSourcePath()));
 
     $dbAlbum = $dbAlbums[$dbId];
 
@@ -65,4 +65,6 @@ foreach (Albums::get() as $album) {
     $filesystem = new Filesystem;
 
     $filesystem->copy($jsonFile, sprintf("%s/%s.json", QUEUE_ROOT, uniqid()));
+
+    printf("%d|%d|%s", $dbId, $album->date->format("Y"), $album->name);
 }
