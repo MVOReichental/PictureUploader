@@ -3,7 +3,7 @@
     "description": "A webfrontend for uploading picture albums to the MVO website",
     "homepage": "https://musikverein-reichental.de",
     "minimum-stability": "stable",
-    "license": "proprietary",
+    "license": "",
     "authors": [
         {
             "name": "Michael Wieland",
