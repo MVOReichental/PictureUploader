@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "056a1b0f3acdc15b6cf9d9381dd49194",
+    "content-hash": "f5372c9c966a1a4adc72e9be9c5c3844",
     "packages": [
         {
             "name": "altorouter/altorouter",
@@ -66,12 +66,12 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Programie/Pini.git",
+                "url": "https://gitlab.com/Programie/Pini.git",
                 "reference": "cda015aba4d1fe617a62adbd5b6aab1fdbf78964"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Programie/Pini/zipball/cda015aba4d1fe617a62adbd5b6aab1fdbf78964",
+                "url": "https://gitlab.com/api/v4/projects/Programie%2FPini/repository/archive.zip?sha=cda015aba4d1fe617a62adbd5b6aab1fdbf78964",
                 "reference": "cda015aba4d1fe617a62adbd5b6aab1fdbf78964",
                 "shasum": ""
             },
@@ -98,7 +98,7 @@
                 }
             ],
             "description": "A simple PHP class for reading and writing ini files",
-            "time": "2016-11-04 14:58:01"
+            "time": "2016-11-04T14:58:01+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -318,6 +318,9 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-gd": "*",
+        "ext-json": "*"
+    },
     "platform-dev": []
 }
