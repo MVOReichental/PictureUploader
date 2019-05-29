@@ -1,7 +1,6 @@
 <?php
 use de\mvo\pictureuploader\Album;
 use de\mvo\pictureuploader\Albums;
-use de\mvo\pictureuploader\Config;
 use de\mvo\pictureuploader\image\Resizer;
 use Symfony\Component\Filesystem\Filesystem;
 
