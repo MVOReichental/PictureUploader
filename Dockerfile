@@ -1,3 +1,17 @@
+FROM composer AS composer
+
+COPY ./composer.* /app/
+WORKDIR /app
+RUN composer install --no-dev --ignore-platform-reqs
+
+
+FROM node AS npm
+
+COPY ./httpdocs /app/httpdocs/
+WORKDIR /app/httpdocs
+RUN npm install
+
+
 FROM php:7.3-apache-stretch
 
 RUN set -ex; \
@@ -29,11 +43,18 @@ RUN sed -ri -e 's!/var/www/html!/app/httpdocs!g' /etc/apache2/sites-available/*.
 
 RUN a2enmod rewrite
 
-COPY . /app
-RUN mv /app/docker/config.ini /app/src/main/resources/config.ini
+COPY --from=composer /app/vendor /app/vendor/
+COPY --from=npm /app/httpdocs /app/httpdocs/
+
+COPY ./bin /app/bin/
+COPY ./docker/config.ini /app/src/main/resources/config.ini
+COPY ./docker/entrypoint.sh /entrypoint.sh
+COPY ./src /app/src/
+COPY ./bootstrap.php /app/bootstrap.php
+
 RUN chown -R www-data:www-data /app
 
 VOLUME ["/app/src/main/resources/queue", "/tmp/pictures-cache"]
 
-ENTRYPOINT ["/app/docker/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["frontend"]
