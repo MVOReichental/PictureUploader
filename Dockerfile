@@ -52,7 +52,7 @@ COPY ./docker/entrypoint.sh /entrypoint.sh
 COPY ./src /app/src/
 COPY ./bootstrap.php /app/bootstrap.php
 
-VOLUME ["/albums", "/queue"]
+VOLUME ["/albums", "/queue", "/pictures-cache"]
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["frontend"]
