@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  frontend:
+    image: registry.gitlab.com/mvoreichental/pictureuploader
+    build: .
+    volumes:
+      - albums:/albums
+      - queue:/queue
+    ports:
+      - target: 80
+        published: 80
+    command: frontend
+
+  backend:
+    image: registry.gitlab.com/mvoreichental/pictureuploader
+    build: .
+    volumes:
+      - albums:/albums
+      - queue:/queue
+      - pictures-cache:/pictures-cache
+    command: backend
+
+volumes:
+  albums:
+  queue:
+  pictures-cache:
