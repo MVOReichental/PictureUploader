@@ -1,6 +1,7 @@
 <?php
 use de\mvo\pictureuploader\Album;
 use de\mvo\pictureuploader\Albums;
+use de\mvo\pictureuploader\Config;
 use de\mvo\pictureuploader\image\Resizer;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -115,6 +116,6 @@ switch ($match["target"]) {
 
         $filesystem = new Filesystem;
 
-        $filesystem->copy($jsonFile, sprintf("%s/%s.json", QUEUE_ROOT, uniqid()));
+        $filesystem->copy($jsonFile, sprintf("%s/%s.json", Config::getValue("queue-root"), uniqid()));
         break;
 }

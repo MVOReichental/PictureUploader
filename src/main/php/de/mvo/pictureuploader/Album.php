@@ -164,7 +164,7 @@ class Album
 
     public function getJsonPath()
     {
-        return sprintf("%s/%d/%s.json", ALBUMS_ROOT, $this->date->format("Y"), $this->folder);
+        return sprintf("%s/%d/%s.json", Config::getValue("albums-root"), $this->date->format("Y"), $this->folder);
     }
 
     public function updatePictures()

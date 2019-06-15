@@ -59,10 +59,12 @@ class Albums extends ArrayObject
 
     public static function getInQueue()
     {
+        $queueRoot = Config::getValue("queue-root");
+
         $list = new self;
 
-        if (is_dir(QUEUE_ROOT)) {
-            foreach (new DirectoryIterator(QUEUE_ROOT) as $item) {
+        if (is_dir($queueRoot)) {
+            foreach (new DirectoryIterator($queueRoot) as $item) {
                 if ($item->isDot()) {
                     continue;
                 }
