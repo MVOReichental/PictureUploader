@@ -268,7 +268,6 @@ class Album
         )));
 
         $remoteAppDir = Config::getValue(null, "remote-app-dir");
-        $logFile = Config::getValue(null, "rsync-log");
         $remotePath = sprintf("%s/httpdocs/pictures/%s/%s", $remoteAppDir, $this->date->format("Y"), $this->name);
         $sshKey = Config::getValue(null, "ssh-key");
         $sshUser = Config::getValue(null, "ssh-user");
@@ -280,7 +279,6 @@ class Album
             "rsync",
             "-avz",
             "--delete",
-            sprintf("--log-file %s", escapeshellarg($logFile)),
             sprintf("--rsync-path %s", escapeshellarg(sprintf("mkdir -p %s && rsync", $remotePath))),
             sprintf("-e %s", escapeshellarg(sprintf("ssh -i %s", $sshKey))),
             escapeshellarg(sprintf("%s/", $cachePath)),
