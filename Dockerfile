@@ -52,9 +52,9 @@ COPY ./docker/entrypoint.sh /entrypoint.sh
 COPY ./src /app/src/
 COPY ./bootstrap.php /app/bootstrap.php
 
-RUN chown -R www-data:www-data /albums /queue
-
 VOLUME ["/albums", "/queue"]
+
+RUN chown -R www-data:www-data /albums /queue
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["frontend"]
