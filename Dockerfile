@@ -54,7 +54,5 @@ COPY ./bootstrap.php /app/bootstrap.php
 
 VOLUME ["/albums", "/queue"]
 
-RUN chown -R www-data:www-data /albums /queue
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["frontend"]
