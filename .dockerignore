@@ -1,6 +1,5 @@
 /.git/
 /.idea/
-/.vagrant/
 /httpdocs/node_modules/
 /src/main/resources/config.ini
 /vendor/
