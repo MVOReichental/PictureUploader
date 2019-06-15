@@ -1,5 +1,4 @@
 <?php
-
 namespace de\mvo\pictureuploader;
 
 use com\selfcoders\pini\Pini;
@@ -12,7 +11,7 @@ class Config extends Pini
      */
     private static $pini;
 
-    public static function getInstance()
+    private static function getInstance()
     {
         if (self::$pini !== null) {
             return self::$pini;
@@ -23,15 +22,16 @@ class Config extends Pini
         return self::$pini;
     }
 
-    public static function getValue($section, $property, $defaultValue = null)
+    public static function getValue($property, $defaultValue = null)
     {
+        $value = getenv(sprintf("PICTUREUPLOADER_%s", str_replace("-", "_", strtoupper($property))));
+        if ($value !== false) {
+            return $value;
+        }
+
         $ini = self::getInstance();
 
-        if ($section === null or $section === "") {
-            $sectionInstance = $ini->getDefaultSection();
-        } else {
-            $sectionInstance = $ini->getSection($section);
-        }
+        $sectionInstance = $ini->getDefaultSection();
 
         $value = $defaultValue;
 

@@ -159,7 +159,7 @@ class Album
 
     public function getSourcePath()
     {
-        return sprintf("%s/%d/%s", Config::getValue(null, "source"), $this->date->format("Y"), $this->folder);
+        return sprintf("%s/%d/%s", Config::getValue("source"), $this->date->format("Y"), $this->folder);
     }
 
     public function getJsonPath()
@@ -195,14 +195,14 @@ class Album
 
     public function process()
     {
-        $cachePath = sprintf("%s/%d/%s", Config::getValue(null, "pictures-cache"), $this->date->format("Y"), $this->name);
+        $cachePath = sprintf("%s/%d/%s", Config::getValue("pictures-cache"), $this->date->format("Y"), $this->name);
 
         if (!is_dir($cachePath)) {
             mkdir($cachePath, 0775, true);
         }
 
-        list($largeWidth, $largeHeight) = explode("x", Config::getValue(null, "large-size", "1500x1000"));
-        list($smallWidth, $smallHeight) = explode("x", Config::getValue(null, "small-size", "600x200"));
+        list($largeWidth, $largeHeight) = explode("x", Config::getValue("large-size", "1500x1000"));
+        list($smallWidth, $smallHeight) = explode("x", Config::getValue("small-size", "600x200"));
 
         $filesystem = new Filesystem;
 
@@ -267,11 +267,11 @@ class Album
             "pictures" => $pictures
         )));
 
-        $remoteAppDir = Config::getValue(null, "remote-app-dir");
+        $remoteAppDir = Config::getValue("remote-app-dir");
         $remotePath = sprintf("%s/httpdocs/pictures/%s/%s", $remoteAppDir, $this->date->format("Y"), $this->name);
-        $sshKey = Config::getValue(null, "ssh-key");
-        $sshUser = Config::getValue(null, "ssh-user");
-        $host = Config::getValue(null, "host");
+        $sshKey = Config::getValue("ssh-key");
+        $sshUser = Config::getValue("ssh-user");
+        $host = Config::getValue("host");
         $updateScript = sprintf("%s/bin/update-pictures.php", $remoteAppDir);
 
         $rsyncCommand = array

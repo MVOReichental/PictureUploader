@@ -10,7 +10,7 @@ class Albums extends ArrayObject
     {
         $list = new self;
 
-        foreach (new DirectoryIterator(Config::getValue(null, "source")) as $year) {
+        foreach (new DirectoryIterator(Config::getValue("source")) as $year) {
             if (!$year->isDir()) {
                 continue;
             }
