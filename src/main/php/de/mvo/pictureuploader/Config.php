@@ -40,7 +40,7 @@ class Config extends Pini
         }
 
         if ($value === null) {
-            throw new UnexpectedValueException("Configuration property '" . $property . "' in section '" . $section . "' not set and does not have a default value");
+            throw new UnexpectedValueException("Configuration property '" . $property . "' not set and does not have a default value");
         }
 
         return $value;
