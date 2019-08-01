@@ -267,12 +267,11 @@ class Album
             "pictures" => $pictures
         )));
 
-        $remoteAppDir = Config::getValue("remote-app-dir");
-        $remotePath = sprintf("%s/data/pictures/%s/%s", $remoteAppDir, $this->date->format("Y"), $this->name);
+        $remotePath = sprintf("%s/%s/%s", Config::getValue("remote-pictures-dir"), $this->date->format("Y"), $this->name);
         $sshKey = Config::getValue("ssh-key");
         $sshUser = Config::getValue("ssh-user");
         $host = Config::getValue("host");
-        $updateScript = Config::getValue("update-script", sprintf("%s/bin/update-pictures.php", $remoteAppDir));
+        $updateScript = Config::getValue("update-script");
 
         $rsyncCommand = array
         (
