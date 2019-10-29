@@ -10,7 +10,7 @@
   "homepage": "https://musikverein-reichental.de",
   "dependencies": {
     "bootstrap": "^4.0.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "moment": "^2.21.0",
     "mustache": "^2.3.0",
     "popper.js": "^1.12.9"
