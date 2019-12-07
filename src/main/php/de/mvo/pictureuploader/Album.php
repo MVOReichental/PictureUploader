@@ -65,7 +65,7 @@ class Album
 
     public static function getAlbumFromYearAndFoldername($year, $folder)
     {
-        if (!preg_match("/^([0-9]+).([0-9]+).?(-[0-9\.]+)? (.*)$/", $folder, $matches)) {
+        if (!preg_match("/^([0-9]+)\.([0-9]+)\.?(-[0-9\.]+)? (.*)$/", $folder, $matches)) {
             return null;
         }
 
