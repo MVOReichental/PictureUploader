@@ -5,14 +5,14 @@ WORKDIR /app
 RUN composer install --no-dev --ignore-platform-reqs
 
 
-FROM node AS npm
+FROM node:15 AS npm
 
 COPY ./httpdocs /app/httpdocs/
 WORKDIR /app/httpdocs
 RUN npm install
 
 
-FROM php:7.3-apache-stretch
+FROM php:7.4-apache-buster
 
 RUN set -ex; \
     apt-get update; \
@@ -23,7 +23,7 @@ RUN set -ex; \
     savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
     apt-get install -y --no-install-recommends libjpeg-dev libpng-dev; \
-    docker-php-ext-configure gd --with-jpeg-dir=/usr; \
+    docker-php-ext-configure gd --with-jpeg; \
     docker-php-ext-install gd; \
     apt-mark auto '.*' > /dev/null; \
     apt-mark manual $savedAptMark; \
