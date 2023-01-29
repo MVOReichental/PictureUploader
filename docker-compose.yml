@@ -7,6 +7,7 @@ services:
     volumes:
       - albums:/albums
       - queue:/queue
+      - /data/pictures/Musikverein:/pictures:ro
     ports:
       - target: 80
         published: 80
@@ -19,6 +20,7 @@ services:
       - albums:/albums
       - queue:/queue
       - pictures-cache:/pictures-cache
+      - /data/pictures/Musikverein:/pictures:ro
     command: backend
 
 volumes:
