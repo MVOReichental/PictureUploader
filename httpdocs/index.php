@@ -67,7 +67,6 @@ switch ($match["target"]) {
             break;
         }
 
-        header("Content-Type: image/jpeg");
         $file = fopen($filename, "rb");
         if ($file === false) {
             http_response_code(500);
@@ -75,6 +74,7 @@ switch ($match["target"]) {
             break;
         }
 
+        header("Content-Type: image/jpeg");
         fpassthru($file);
         fclose($file);
         break;
