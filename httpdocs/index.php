@@ -2,7 +2,6 @@
 use de\mvo\pictureuploader\Album;
 use de\mvo\pictureuploader\Albums;
 use de\mvo\pictureuploader\Config;
-use de\mvo\pictureuploader\image\Resizer;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once __DIR__ . "/../bootstrap.php";
@@ -68,10 +67,16 @@ switch ($match["target"]) {
             break;
         }
 
-        $resizer = new Resizer($filename);
-
         header("Content-Type: image/jpeg");
-        imagejpeg($resizer->resize(200, 200));
+        $file = fopen($filename, "rb");
+        if ($file === false) {
+            http_response_code(500);
+            echo "Unable to read picture file!";
+            break;
+        }
+
+        fpassthru($file);
+        fclose($file);
         break;
     case "upload":
         if (!isset($_POST["year"]) or !isset($_POST["folder"]) or !$_POST["year"] or !$_POST["folder"]) {
