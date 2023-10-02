@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   frontend:
-    image: registry.gitlab.com/mvoreichental/pictureuploader
+    image: ghcr.io/mvoreichental/pictureuploader
     build: .
     volumes:
       - albums:/albums
@@ -14,7 +14,7 @@ services:
     command: frontend
 
   backend:
-    image: registry.gitlab.com/mvoreichental/pictureuploader
+    image: ghcr.io/mvoreichental/pictureuploader
     build: .
     volumes:
       - albums:/albums

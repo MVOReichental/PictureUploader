@@ -1,0 +1,30 @@
+name: Build image
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * SUN'
+
+permissions:
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/mvoreichental/pictureuploader
+      - uses: docker/build-push-action@v5
+        with:
+          push: true
+          context: .
+          tags: ghcr.io/mvoreichental/pictureuploader
+          labels: ${{ steps.metadata.outputs.labels }}
