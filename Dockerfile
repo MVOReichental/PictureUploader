@@ -12,7 +12,7 @@ WORKDIR /app/httpdocs
 RUN npm install
 
 
-FROM php:7.4-apache-buster
+FROM php:8.1-apache
 
 RUN set -ex; \
     apt-get update; \
@@ -39,9 +39,9 @@ RUN set -ex; \
 
 RUN sed -ri -e 's!/var/www/html!/app/httpdocs!g' /etc/apache2/sites-available/*.conf && \
     sed -ri -e 's!/var/www/!/app/httpdocs!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf && \
-    echo "/queue IN_CLOSE_WRITE,IN_NO_LOOP /app/bin/process.php" > /etc/incron.d/mvo-picture-uploader
-
-RUN a2enmod rewrite
+    echo "/queue IN_CLOSE_WRITE,IN_NO_LOOP /app/bin/process.php" > /etc/incron.d/mvo-picture-uploader && \
+    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
+    a2enmod rewrite
 
 COPY --from=composer /app/vendor /app/vendor/
 COPY --from=npm /app/httpdocs /app/httpdocs/
