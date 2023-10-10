@@ -20,7 +20,7 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends incron rsync ssh; \
     rm -rf /var/lib/apt/lists/*; \
-    install-php 8.1 gd; \
+    install-php 8.1 gd mbstring; \
     echo "/queue IN_CLOSE_WRITE,IN_NO_LOOP /app/bin/process.php" > /etc/incron.d/mvo-picture-uploader && \
     a2enmod rewrite
 
