@@ -12,35 +12,16 @@ WORKDIR /app/httpdocs
 RUN npm install
 
 
-FROM php:8.1-apache
+FROM ghcr.io/programie/dockerimages/php
 
 RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends incron rsync ssh; \
-    rm -rf /var/lib/apt/lists/*
-
-RUN set -ex; \
-    savedAptMark="$(apt-mark showmanual)"; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends libjpeg-dev libpng-dev; \
-    docker-php-ext-configure gd --with-jpeg; \
-    docker-php-ext-install gd; \
-    apt-mark auto '.*' > /dev/null; \
-    apt-mark manual $savedAptMark; \
-    ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-        | awk '/=>/ { print $3 }' \
-        | sort -u \
-        | xargs -r dpkg-query -S \
-        | cut -d: -f1 \
-        | sort -u \
-        | xargs -rt apt-mark manual; \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    rm -rf /var/lib/apt/lists/*
-
-RUN sed -ri -e 's!/var/www/html!/app/httpdocs!g' /etc/apache2/sites-available/*.conf && \
+    rm -rf /var/lib/apt/lists/*; \
+    install-php 8.1 gd; \
+    sed -ri -e 's!/var/www/html!/app/httpdocs!g' /etc/apache2/sites-available/*.conf && \
     sed -ri -e 's!/var/www/!/app/httpdocs!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf && \
     echo "/queue IN_CLOSE_WRITE,IN_NO_LOOP /app/bin/process.php" > /etc/incron.d/mvo-picture-uploader && \
-    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     a2enmod rewrite
 
 COPY --from=composer /app/vendor /app/vendor/
