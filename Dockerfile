@@ -14,13 +14,13 @@ RUN npm install
 
 FROM ghcr.io/programie/dockerimages/php
 
+ENV WEB_ROOT=/app/httpdocs
+
 RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends incron rsync ssh; \
     rm -rf /var/lib/apt/lists/*; \
     install-php 8.1 gd; \
-    sed -ri -e 's!/var/www/html!/app/httpdocs!g' /etc/apache2/sites-available/*.conf && \
-    sed -ri -e 's!/var/www/!/app/httpdocs!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf && \
     echo "/queue IN_CLOSE_WRITE,IN_NO_LOOP /app/bin/process.php" > /etc/incron.d/mvo-picture-uploader && \
     a2enmod rewrite
 
